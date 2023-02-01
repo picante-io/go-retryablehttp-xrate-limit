@@ -486,6 +486,10 @@ func baseRetryPolicy(resp *http.Response, err error) (bool, error) {
 	// a Retry-After response header to indicate when the server is
 	// available to start processing request from client.
 	if resp.StatusCode == http.StatusTooManyRequests {
+		resetSeconds, _ := strconv.Atoi(resp.Header.Get("X-RateLimit-Reset"))
+		fmt.Println("X-RateLimit-Reset:", resetSeconds, "Sleep", resetSeconds)
+		time.Sleep(time.Duration(resetSeconds) * time.Second)
+		fmt.Println("Awake after slept:", resetSeconds)
 		return true, nil
 	}
 
