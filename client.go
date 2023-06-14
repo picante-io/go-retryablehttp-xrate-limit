@@ -589,8 +589,6 @@ func (c *Client) Do(req *Request) (*http.Response, error) {
 		switch v := logger.(type) {
 		case LeveledLogger:
 			v.Debug("performing request", "method", req.Method, "url", req.URL)
-		case Logger:
-			v.Printf("[DEBUG] %s %s", req.Method, req.URL)
 		}
 	}
 
@@ -621,10 +619,10 @@ func (c *Client) Do(req *Request) (*http.Response, error) {
 			switch v := logger.(type) {
 			case LeveledLogger:
 				c.RequestLogHook(hookLogger{v}, req.Request, i)
-			case Logger:
-				c.RequestLogHook(v, req.Request, i)
-			default:
-				c.RequestLogHook(nil, req.Request, i)
+				// case Logger:
+				// 	c.RequestLogHook(v, req.Request, i)
+				// default:
+				// 	c.RequestLogHook(nil, req.Request, i)
 			}
 		}
 
@@ -646,8 +644,8 @@ func (c *Client) Do(req *Request) (*http.Response, error) {
 			switch v := logger.(type) {
 			case LeveledLogger:
 				v.Error("request failed", "error", err, "method", req.Method, "url", req.URL)
-			case Logger:
-				v.Printf("[ERR] %s %s request failed: %v", req.Method, req.URL, err)
+				// case Logger:
+				// 	v.Printf("[ERR] %s %s request failed: %v", req.Method, req.URL, err)
 			}
 		} else {
 			// Call this here to maintain the behavior of logging all requests,
@@ -657,8 +655,8 @@ func (c *Client) Do(req *Request) (*http.Response, error) {
 				switch v := logger.(type) {
 				case LeveledLogger:
 					c.ResponseLogHook(hookLogger{v}, resp)
-				case Logger:
-					c.ResponseLogHook(v, resp)
+				// case Logger:
+				// 	c.ResponseLogHook(v, resp)
 				default:
 					c.ResponseLogHook(nil, resp)
 				}
@@ -690,8 +688,8 @@ func (c *Client) Do(req *Request) (*http.Response, error) {
 			switch v := logger.(type) {
 			case LeveledLogger:
 				v.Debug("retrying request", "request", desc, "timeout", wait, "remaining", remain)
-			case Logger:
-				v.Printf("[DEBUG] %s: retrying in %s (%d left)", desc, wait, remain)
+				// case Logger:
+				// 	v.Printf("[DEBUG] %s: retrying in %s (%d left)", desc, wait, remain)
 			}
 		}
 		timer := time.NewTimer(wait)
@@ -755,8 +753,8 @@ func (c *Client) drainBody(body io.ReadCloser) {
 			switch v := c.logger().(type) {
 			case LeveledLogger:
 				v.Error("error reading response body", "error", err)
-			case Logger:
-				v.Printf("[ERR] error reading response body: %v", err)
+				// case Logger:
+				// 	v.Printf("[ERR] error reading response body: %v", err)
 			}
 		}
 	}
